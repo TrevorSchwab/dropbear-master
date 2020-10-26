@@ -1,7 +1,7 @@
 const { traverse } = require('../src/traverse');
 
 describe(traverse, () => {
-  it.skip('should travel to all the nodes in the tree and reverse the math', () => {
+  it('should travel to all the nodes in the tree and reverse the math', () => {
     const ast = {
       type: 'CallExpression',
       name: 'add',
@@ -19,11 +19,6 @@ describe(traverse, () => {
           }
         },
       },
-      NumericLiteral: {
-        exit({ node }) {
-          node.value = node.value * 2;
-        },
-      },
     };
 
     traverse(ast, visitor);
@@ -31,7 +26,7 @@ describe(traverse, () => {
     expect(ast.name).toBe('subtract');
   });
 
-  it.skip('should travel to all the nodes in the tree and double all of the numbers', () => {
+  it('should travel to all the nodes in the tree and double all of the numbers', () => {
     const ast = {
       type: 'CallExpression',
       name: 'add',
@@ -53,5 +48,36 @@ describe(traverse, () => {
 
     expect(ast.arguments[0].value).toBe(24);
     expect(ast.arguments[1].value).toBe(12);
+  });
+  it('should travel to all the nodes in the tree and reverse divide to multiply and multiply the argument values by 3', () => {
+    const ast = {
+      type: 'CallExpression',
+      name: 'divide',
+      arguments: [
+        { type: 'NumericLiteral', value: 12 },
+        { type: 'NumericLiteral', value: 6 },
+      ],
+    };
+
+    const visitor = {
+      CallExpression: {
+        enter({ node }) {
+          if (node.name === 'divide') {
+            node.name = 'multiply';
+          }
+        },
+      },
+      NumericLiteral: {
+        exit({ node }) {
+          node.value = node.value * 3;
+        },
+      },
+    };
+
+    traverse(ast, visitor);
+
+    expect(ast.name).toBe('multiply');
+    expect(ast.arguments[0].value).toBe(36);
+    expect(ast.arguments[1].value).toBe(18);
   });
 });
