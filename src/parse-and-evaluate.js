@@ -5,23 +5,11 @@ const { log, pipe } = require('./utilities');
 const { parseProgram } = require('./parse-program');
 const { transform } = require('./transform');
 
-const parseAndEvaluate = pipe(
-  tokenize,
-  parse,
-  transform,
-  evaluate,
-);
+const parseAndEvaluate = pipe(tokenize, parse, evaluate);
 
-const tokenizeAndParse = pipe(
-  tokenize,
-  parse,
-);
+const tokenizeAndParse = pipe(tokenize, parse);
 
-const parseAndEvaluateProgram = pipe(
-  tokenize,
-  parseProgram,
-  evaluate,
-);
+const parseAndEvaluateProgram = pipe(tokenize, parseProgram, evaluate);
 
 module.exports = {
   parseAndEvaluate,
